@@ -8,6 +8,8 @@ interface CurrencyFormat {
   symbol: string;
   locale: string;
   decimals: number;
+  /** Fewer decimals allowed when the amount has none (฿199, not ฿199.00). */
+  minDecimals?: number;
 }
 
 const CURRENCY_FORMATS: Record<string, CurrencyFormat> = {
@@ -15,6 +17,7 @@ const CURRENCY_FORMATS: Record<string, CurrencyFormat> = {
   MYR: { symbol: 'RM', locale: 'en-MY', decimals: 2 },
   SGD: { symbol: 'S$', locale: 'en-SG', decimals: 2 },
   TWD: { symbol: 'NT$', locale: 'zh-TW', decimals: 0 },
+  THB: { symbol: '฿', locale: 'en-US', decimals: 2, minDecimals: 0 },
 };
 
 /** Render a raw Shopee price (real amount × 100000) for display. */
@@ -24,7 +27,10 @@ export function formatPrice(raw: number, currency = 'IDR'): string {
   // Unknown currency: show the code rather than guess at a symbol or precision.
   if (!fmt) return `${currency} ${amount.toLocaleString('id-ID')}`;
   return `${fmt.symbol}${amount.toLocaleString(fmt.locale, {
-    minimumFractionDigits: fmt.decimals,
+    minimumFractionDigits: fmt.minDecimals ?? fmt.decimals,
     maximumFractionDigits: fmt.decimals,
   })}`;
 }
+
+/** Locale for plain counts (sold, stock, reviews, followers): 1,234 not 1.234. */
+export const COUNT_LOCALE = 'en-US';

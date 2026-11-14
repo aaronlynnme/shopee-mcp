@@ -5,7 +5,7 @@ import { BASE_URL, CURRENCY, TIMEZONE, captureAll, waitForCollected } from '../b
 import type { CollectedResponse } from '../browser/session.js';
 import { cache } from '../utils/cache.js';
 import { withErrorHandling } from '../utils/errors.js';
-import { formatPrice } from '../utils/price.js';
+import { formatPrice, COUNT_LOCALE } from '../utils/price.js';
 import type { FlashSaleItem, FlashSaleSession } from '../api/types.js';
 
 const SESSIONS_API = 'flash_sale/get_all_sessions';
@@ -52,7 +52,7 @@ export function flashStockText(it: FlashSaleItem): string {
   const sold = Math.max(0, it.flash_sale_stock - it.stock);
   return it.stock === 0
     ? '🔥 Sold out'
-    : `📦 ${sold.toLocaleString('id-ID')}/${it.flash_sale_stock.toLocaleString('id-ID')} claimed`;
+    : `📦 ${sold.toLocaleString(COUNT_LOCALE)}/${it.flash_sale_stock.toLocaleString(COUNT_LOCALE)} claimed`;
 }
 
 export function registerFlashSaleTools(server: McpServer): void {

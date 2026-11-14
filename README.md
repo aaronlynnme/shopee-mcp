@@ -1,5 +1,7 @@
 # shopee-mcp
 
+> **Thailand fork.** This fork of [bintangtimurlangit/shopee-mcp](https://github.com/bintangtimurlangit/shopee-mcp) defaults to `shopee.co.th`: Thai locale, Bangkok time, and prices in baht (฿). Counts use `1,234` grouping. Other regions still work through `SHOPEE_DOMAIN`.
+
 [![npm](https://img.shields.io/npm/v/@bintangtimurlangit/shopee-mcp?style=flat-square)](https://www.npmjs.com/package/@bintangtimurlangit/shopee-mcp)
 [![license](https://img.shields.io/github/license/bintangtimurlangit/shopee-mcp?style=flat-square)](./LICENSE)
 [![CI](https://img.shields.io/github/actions/workflow/status/bintangtimurlangit/shopee-mcp/ci.yml?branch=main&style=flat-square)](https://github.com/bintangtimurlangit/shopee-mcp/actions)
@@ -137,16 +139,16 @@ On a machine with a real display, drop `xvfb-run`: `"command": "shopee-mcp"`, `"
 
 All optional — see `.env.example`. Copy to `.env` to override.
 
-| Variable               | Default                        | Purpose                                                         |
-| ---------------------- | ------------------------------ | --------------------------------------------------------------- |
-| `SHOPEE_DOMAIN`        | `shopee.co.id`                 | Regional Shopee domain (`.co.id`, `.com.my`, `.sg`, `.tw`).     |
-| `SHOPEE_LOCALE`        | _derived from domain_          | Browser locale override.                                        |
-| `SHOPEE_TIMEZONE`      | _derived from domain_          | Browser timezone override.                                      |
-| `SHOPEE_PROFILE_DIR`   | `~/.shopee-mcp/chrome-profile` | Where the saved login lives.                                    |
-| `SHOPEE_HEADLESS`      | `false`                        | Keep `false` — headless is detected.                            |
-| `SHOPEE_ACCOUNT_TOOLS` | `auto`                         | `auto`: account tools while logged in. `off`: always read-only. |
-| `CACHE_TTL_MS`         | `30000`                        | In-memory cache lifetime.                                       |
-| `DEBUG`                | `false`                        | Log startup/debug info to stderr.                               |
+| Variable               | Default                        | Purpose                                                               |
+| ---------------------- | ------------------------------ | --------------------------------------------------------------------- |
+| `SHOPEE_DOMAIN`        | `shopee.co.th`                 | Regional Shopee domain (`.co.th`, `.co.id`, `.com.my`, `.sg`, `.tw`). |
+| `SHOPEE_LOCALE`        | _derived from domain_          | Browser locale override.                                              |
+| `SHOPEE_TIMEZONE`      | _derived from domain_          | Browser timezone override.                                            |
+| `SHOPEE_PROFILE_DIR`   | `~/.shopee-mcp/chrome-profile` | Where the saved login lives.                                          |
+| `SHOPEE_HEADLESS`      | `false`                        | Keep `false` — headless is detected.                                  |
+| `SHOPEE_ACCOUNT_TOOLS` | `auto`                         | `auto`: account tools while logged in. `off`: always read-only.       |
+| `CACHE_TTL_MS`         | `30000`                        | In-memory cache lifetime.                                             |
+| `DEBUG`                | `false`                        | Log startup/debug info to stderr.                                     |
 
 Tool timings and client timeouts: see [docs/CONFIGURATION.md](./docs/CONFIGURATION.md#tools-and-request-timeouts).
 

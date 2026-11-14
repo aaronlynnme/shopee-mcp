@@ -6,6 +6,7 @@ import { cache } from '../utils/cache.js';
 import { withErrorHandling, truncate } from '../utils/errors.js';
 import { flattenSearchItems, formatResultList } from './search.js';
 import type { SearchItemsResponse, ShopBase, ShopBaseResponse } from '../api/types.js';
+import { COUNT_LOCALE } from '../utils/price.js';
 
 /** Shop listing sort → the shop search page's params (note "pop", not "relevancy"). */
 const SHOP_SORT_MAP: Record<string, { sortBy: string; order?: string }> = {
@@ -39,9 +40,9 @@ export function formatShop(s: ShopBase, now: number = Date.now()): string {
     '',
     `📊 **Stats:**`,
     s.rating_star ? `  ⭐ Shop rating: ${s.rating_star.toFixed(2)}` : '',
-    s.item_count !== undefined ? `  📦 Products: ${s.item_count.toLocaleString('id-ID')}` : '',
+    s.item_count !== undefined ? `  📦 Products: ${s.item_count.toLocaleString(COUNT_LOCALE)}` : '',
     s.follower_count !== undefined
-      ? `  👥 Followers: ${s.follower_count.toLocaleString('id-ID')}`
+      ? `  👥 Followers: ${s.follower_count.toLocaleString(COUNT_LOCALE)}`
       : '',
     s.response_rate !== undefined
       ? `  💬 Chat response: ${s.response_rate}%${s.response_time ? ` (within ~${formatDuration(s.response_time)})` : ''}`

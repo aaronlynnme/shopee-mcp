@@ -4,7 +4,7 @@ import { shopeeCapture, shopeeUrl } from '../api/client.js';
 import { BASE_URL, CURRENCY } from '../browser/session.js';
 import { cache } from '../utils/cache.js';
 import { withErrorHandling } from '../utils/errors.js';
-import { formatPrice } from '../utils/price.js';
+import { formatPrice, COUNT_LOCALE } from '../utils/price.js';
 import type { SearchItemsResponse, SearchItem, ItemBasic, SearchResult } from '../api/types.js';
 
 /** Normalise a legacy `item_basic` card. */
@@ -128,7 +128,7 @@ export function formatResultList(items: SearchResult[], opts: ResultListOptions)
 
   const lines: string[] = [
     opts.title,
-    `📊 ${totalCount.toLocaleString('id-ID')} total products | Page ${page}${totalPages > 1 ? `/${totalPages}` : ''}`,
+    `📊 ${totalCount.toLocaleString(COUNT_LOCALE)} total products | Page ${page}${totalPages > 1 ? `/${totalPages}` : ''}`,
     ``,
   ];
 
@@ -139,7 +139,7 @@ export function formatResultList(items: SearchResult[], opts: ResultListOptions)
     const soldLabel = r.soldText
       ? r.soldText
       : r.sold
-        ? `${r.sold.toLocaleString('id-ID')} sold`
+        ? `${r.sold.toLocaleString(COUNT_LOCALE)} sold`
         : '';
     const soldText = soldLabel ? ` | 📦 ${soldLabel}` : '';
     const official = r.isOfficialShop ? ' [Shopee Mall]' : '';
@@ -175,7 +175,7 @@ export interface SearchFilters {
   maxPrice?: number;
   /** Minimum star rating, 1-5. */
   minRating?: number;
-  /** Seller location as Shopee lists it under "Shipped From", e.g. "DKI Jakarta". */
+  /** Seller location as Shopee lists it under "Shipped From", e.g. a Thai province. */
   location?: string;
   officialMallOnly?: boolean;
 }
@@ -226,7 +226,7 @@ export function registerSearchTools(server: McpServer): void {
         .number()
         .min(0)
         .optional()
-        .describe('Minimum price in whole currency units, e.g. 200000 for Rp200.000'),
+        .describe('Minimum price in whole currency units, e.g. 500 for ฿500'),
       maxPrice: z.number().min(0).optional().describe('Maximum price in whole currency units'),
       minRating: z
         .number()
@@ -238,7 +238,7 @@ export function registerSearchTools(server: McpServer): void {
       location: z
         .string()
         .optional()
-        .describe('Seller location as Shopee names it, e.g. "DKI Jakarta", "Jawa Barat"'),
+        .describe('Seller location as named in the "Shipped From" filter, e.g. a Thai province'),
       officialMallOnly: z
         .boolean()
         .optional()

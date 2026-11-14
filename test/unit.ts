@@ -383,6 +383,12 @@ test('priceText: formats a single MYR price with the shared currency table', () 
   );
 });
 
+test('formatPrice: THB drops .00 on whole baht but keeps satang', () => {
+  assert.equal(formatPrice(129900000, 'THB'), '฿1,299');
+  assert.equal(formatPrice(1950000, 'THB'), '฿19.5');
+  assert.equal(formatPrice(1925000, 'THB'), '฿19.25');
+});
+
 test('priceText: formats an IDR price unchanged', () => {
   assert.equal(
     priceText({ single_value: 15000000000, range_min: -1, range_max: -1 }, 'IDR'),
@@ -473,11 +479,19 @@ test('regionFor: .tw domains get Taiwanese locale/timezone/currency', () => {
   });
 });
 
-test('regionFor: an unmapped domain falls back to the Indonesian defaults', () => {
+test('regionFor: .th domains get Thai locale/timezone/currency', () => {
+  assert.deepEqual(regionFor('shopee.co.th'), {
+    locale: 'th-TH',
+    timezone: 'Asia/Bangkok',
+    currency: 'THB',
+  });
+});
+
+test('regionFor: an unmapped domain falls back to the Thai defaults', () => {
   assert.deepEqual(regionFor('shopee.vn'), {
-    locale: 'id-ID',
-    timezone: 'Asia/Jakarta',
-    currency: 'IDR',
+    locale: 'th-TH',
+    timezone: 'Asia/Bangkok',
+    currency: 'THB',
   });
 });
 
@@ -652,7 +666,7 @@ test('sellerLines: badges, stats and a vacation warning', () => {
     vacation: true,
   });
   assert.equal(lines[0], '  🏪 Doclo.id [Verified] — Shop ID `9`');
-  assert.equal(lines[1], '  ⭐ 4.7 | 💬 79% response | 👥 2.634 followers');
+  assert.equal(lines[1], '  ⭐ 4.7 | 💬 79% response | 👥 2,634 followers');
   assert.ok(lines[2].includes('vacation'));
 });
 
@@ -661,7 +675,7 @@ test('sellerLines: badges, stats and a vacation warning', () => {
 test('starBreakdown: lists 5★ first from Shopee’s 1★..5★ array', () => {
   assert.equal(
     starBreakdown({ rating_total: 10, rating_count: [1, 2, 3, 4, 1000] }),
-    '5★ 1.000 · 4★ 4 · 3★ 3 · 2★ 2 · 1★ 1',
+    '5★ 1,000 · 4★ 4 · 3★ 3 · 2★ 2 · 1★ 1',
   );
 });
 
@@ -934,8 +948,8 @@ test('formatOrder: status, shop, items and total', () => {
   const out = formatOrder(fakeOrder(7), 1);
   assert.ok(out.startsWith('1. **Order `7`** — Completed'));
   assert.ok(out.includes('🏪 iconcomp'));
-  assert.ok(out.includes('• NVME 256GB (Hitam) × 1 — Rp650.000'));
-  assert.ok(out.includes('💰 Total: Rp589.000'));
+  assert.ok(out.includes('• NVME 256GB (Hitam) × 1 — ฿650,000'));
+  assert.ok(out.includes('💰 Total: ฿589,000'));
 });
 
 test('formatOrderDetail: timeline and tracking, never the address or phone', () => {
@@ -1040,8 +1054,8 @@ test('shopVouchersFrom / formatShopVouchers: lists vouchers and marks claimed on
   const vouchers = shopVouchersFrom(tab);
   assert.equal(vouchers.length, 2);
   const out = formatShopVouchers('9', vouchers);
-  assert.ok(out.includes('**Rp53.900 off** | code `A`'));
-  assert.ok(out.includes('min. spend Rp539.000'));
+  assert.ok(out.includes('**฿53,900 off** | code `A`'));
+  assert.ok(out.includes('min. spend ฿539,000'));
   assert.ok(out.split('\n').find((l) => l.includes('code `B`')) !== undefined);
   assert.ok(out.includes('✅ claimed'));
   assert.ok(formatShopVouchers('9', []).includes('no claimable vouchers'));

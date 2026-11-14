@@ -12,7 +12,7 @@ import { BASE_URL, CURRENCY, TIMEZONE, captureAll, waitForCollected } from '../b
 import type { CollectedResponse } from '../browser/session.js';
 import { registerAccountTool } from '../account-mode.js';
 import { withErrorHandling, truncate } from '../utils/errors.js';
-import { formatPrice } from '../utils/price.js';
+import { formatPrice, COUNT_LOCALE } from '../utils/price.js';
 
 function text(t: string) {
   return { content: [{ type: 'text' as const, text: t }] };
@@ -245,7 +245,7 @@ export function voucherBenefit(v: WalletVoucher, currency: string = CURRENCY): s
     return `${v.discount_percentage}% off${v.discount_cap ? ` (max ${formatPrice(v.discount_cap, currency)})` : ''}`;
   }
   if (v.reward_percentage) {
-    return `${v.reward_percentage}% coins cashback${v.reward_cap ? ` (max ${(v.reward_cap / 100000).toLocaleString('id-ID')} coins)` : ''}`;
+    return `${v.reward_percentage}% coins cashback${v.reward_cap ? ` (max ${(v.reward_cap / 100000).toLocaleString(COUNT_LOCALE)} coins)` : ''}`;
   }
   return 'Discount';
 }
@@ -469,13 +469,13 @@ export function registerAccountTools(server: McpServer): void {
           // which (like prices) is assumed to be ×100000.
           const info = summary.data?.coin_info;
           const balance = info?.fe_available_amount ?? (info?.available_amount ?? 0) / 100000;
-          const lines = [`🪙 **Shopee Coins:** ${balance.toLocaleString('id-ID')}`];
+          const lines = [`🪙 **Shopee Coins:** ${balance.toLocaleString(COUNT_LOCALE)}`];
           if (tx.length) {
             lines.push('', '**Recent transactions:**');
             for (const t of tx.slice(0, 10)) {
               const amt = (t.amount ?? 0) / 100000;
               lines.push(
-                `  • ${amt > 0 ? '+' : ''}${amt.toLocaleString('id-ID')}${t.name || t.reason ? ` — ${t.name ?? t.reason}` : ''}${t.ctime ? ` (${formatDateTime(t.ctime)})` : ''}`,
+                `  • ${amt > 0 ? '+' : ''}${amt.toLocaleString(COUNT_LOCALE)}${t.name || t.reason ? ` — ${t.name ?? t.reason}` : ''}${t.ctime ? ` (${formatDateTime(t.ctime)})` : ''}`,
               );
             }
           } else {

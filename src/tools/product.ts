@@ -4,7 +4,7 @@ import { shopeeCapture, shopeeUrl } from '../api/client.js';
 import { BASE_URL, CURRENCY } from '../browser/session.js';
 import { cache } from '../utils/cache.js';
 import { withErrorHandling, truncate } from '../utils/errors.js';
-import { formatPrice } from '../utils/price.js';
+import { formatPrice, COUNT_LOCALE } from '../utils/price.js';
 import type {
   PdpResponse,
   PdpPriceValue,
@@ -94,7 +94,7 @@ export function sellerLines(shop: PdpShop | null | undefined): string[] {
     shop.rating_star ? `⭐ ${shop.rating_star.toFixed(1)}` : '',
     shop.response_rate !== undefined ? `💬 ${shop.response_rate}% response` : '',
     shop.follower_count !== undefined
-      ? `👥 ${shop.follower_count.toLocaleString('id-ID')} followers`
+      ? `👥 ${shop.follower_count.toLocaleString(COUNT_LOCALE)} followers`
       : '',
   ].filter(Boolean);
   return [
@@ -120,7 +120,7 @@ export function registerProductTools(server: McpServer): void {
         .string()
         .url()
         .optional()
-        .describe('Full product URL, e.g. https://shopee.co.id/product/78730497/47060432055'),
+        .describe('Full product URL, e.g. https://shopee.co.th/product/78730497/47060432055'),
     },
     { readOnlyHint: true, idempotentHint: true, openWorldHint: true },
     async ({ shopId, itemId, url }) => {
@@ -187,7 +187,7 @@ export function registerProductTools(server: McpServer): void {
           `💰 **Price:** ${price}${before ? ` ~~${priceText(before, currency)}~~ (-${discountPct}%)` : ''}`,
           '',
           `📊 **Stats:**`,
-          `  ⭐ Rating: ${rating ? rating.toFixed(2) : 'N/A'}${ratingCount ? ` (${ratingCount.toLocaleString('id-ID')} reviews)` : ''}`,
+          `  ⭐ Rating: ${rating ? rating.toFixed(2) : 'N/A'}${ratingCount ? ` (${ratingCount.toLocaleString(COUNT_LOCALE)} reviews)` : ''}`,
           soldText ? `  ✅ Sold: ${soldText}` : '',
           '',
           `📋 **Details:**`,
@@ -195,7 +195,7 @@ export function registerProductTools(server: McpServer): void {
           `  🆕 Condition: ${conditionLabel}`,
           breadcrumb ? `  🗂 Category: ${breadcrumb}` : '',
           stock !== undefined && stock !== null
-            ? `  📦 Stock: ${stock.toLocaleString('id-ID')}`
+            ? `  📦 Stock: ${stock.toLocaleString(COUNT_LOCALE)}`
             : '',
           item.is_free_shipping ? `  🚚 Free shipping` : '',
           `  📍 Location: ${item.shop_location || 'N/A'}`,
